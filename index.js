@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import authRoute from "./routes/auth.js";
+import postRoute from "./routes/posts.js";
 
 const app = express();
 
@@ -20,9 +21,10 @@ app.use(cors());
 // функ для принятия данных с фронта в формате json
 app.use(express.json());
 
-// Routes //http://localhost:3002/api/auth/register
+// Routes 
 // при запросе на такой адресс будут отрабатывать все роуты которые я описываю в auth.js
 app.use("/api/auth", authRoute);
+app.use("/api/posts", postRoute);
 
 async function start() {
   try {
