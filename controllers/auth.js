@@ -12,7 +12,7 @@ export const register = async (req, res) => {
     const isUser = await User.findOne({ username });
     // если такой уже есть пишу сообщение
     if (isUser) {
-      return res.status(402).json({
+      return res.json({
         message: "Данный username уже занят",
       });
     }
