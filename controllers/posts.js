@@ -51,3 +51,19 @@ res.json(newPostWithoutImage)
     res.json ({message:"Что-то пошло не так" })
   }
 };
+
+// Get All Posts
+export const getAll = async(req,res) => {
+try {
+    // нахожу все посты и формирую их по дате создания 
+    const posts = await Post.find().sort('-createdAt')
+    // нахожу все популярные посты делаю лимит 5 и формирую их по просмотрам
+    const popularPosts = await Post.find().limit(5).sort('-views')
+    if(!posts) {
+        return res.json({message:"Постов нет"})
+    }
+    res.json({posts,popularPosts})
+} catch (error) {
+    res.json({message:"Что-то пошло не так"})
+}
+}
