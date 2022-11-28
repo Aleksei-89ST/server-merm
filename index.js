@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import authRoute from "./routes/auth.js";
 import postRoute from "./routes/posts.js";
+import fileUpload from "express-fileupload";
 
 const app = express();
 
@@ -20,6 +21,10 @@ const DB_NAME = process.env.DB_NAME;
 app.use(cors());
 // функ для принятия данных с фронта в формате json
 app.use(express.json());
+// для загрузки файлов на сервер
+app.use(fileUpload())
+// для того чтобы express понимал где лежат статические файлы
+app.use(express.static('uploads'))
 
 // Routes 
 // при запросе на такой адресс будут отрабатывать все роуты которые я описываю в auth.js
