@@ -40,6 +40,7 @@ export const register = async (req, res) => {
     // ответ -возвращаю нового user во фронт для отабражения пользователю
     res.json({
       newUser,
+      token,
       message: "Регистрация прошла успешно",
     });
   } catch (error) {
