@@ -2,6 +2,7 @@ import Post from "../models/Post.js";
 import User from "../models/User.js";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
+import { title } from "process";
 
 // Create Post
 export const createPost = async (req, res) => {
@@ -109,6 +110,33 @@ export const removePost = async (req, res) => {
       $pull: { posts: req.params.id },
     });
     res.json({ message: "Пост был удалён" });
+  } catch (error) {
+    res.json({ message: "Что-то пошло не так" });
+  }
+};
+
+// Update Post
+export const updatePost = async (req, res) => {
+  try {
+    const { title, text, id } = req.body;
+    const post = await Post.findById(id);
+
+    // формирование просто изображения
+    if (req.files) {
+      // даю название файлу который загружаю - если меняю его
+      let fileName = Date.now().toString() + req.files.image.name;
+      // получаю доступ к текущей папке
+      const __dirname = dirname(fileURLToPath(import.meta.url));
+      // перемещаю картинку в uploads под именем каторым сформировал выше
+      req.files.image.mv(path.join(__dirname, "..", "uploads", fileName));
+      post.imgUrl = fileName || "";
+    }
+    post.title = title;
+    post.text = text;
+
+    await post.save();
+
+    res.json(post);
   } catch (error) {
     res.json({ message: "Что-то пошло не так" });
   }
