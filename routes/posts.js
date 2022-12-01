@@ -5,7 +5,8 @@ import {
   getById,
   getMyPosts,
   removePost,
-  updatePost
+  updatePost,
+  getPostComments,
 } from "../controllers/posts.js";
 import { checkAuth } from "../utils/checkAuth.js";
 
@@ -23,16 +24,20 @@ router.get("/", getAll);
 // http://localhost:3002/api/posts/:id
 router.get("/:id", getById);
 
+// Update Post
+// http://localhost:3002/api/posts/:id
+router.put("/:id", checkAuth, updatePost);
+
 // Cet My Posts
 // http://localhost:3002/api/posts/user/me
 router.get("/user/me", checkAuth, getMyPosts);
 
 // Remove Post
 // http://localhost:3002/api/posts/:id
-router.delete("/:id",checkAuth, removePost);
+router.delete("/:id", checkAuth, removePost);
 
-// Update Post
-// http://localhost:3002/api/posts/:id
-router.put("/:id",checkAuth, updatePost);
+// Get Post Comments
+// http://localhost:3002/api/comments/:id
+router.get("/comments/:id", getPostComments);
 
 export default router;

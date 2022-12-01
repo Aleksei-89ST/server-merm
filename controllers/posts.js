@@ -2,7 +2,7 @@ import Post from "../models/Post.js";
 import User from "../models/User.js";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
-import { title } from "process";
+import Comment from "../models/Comment.js";
 
 // Create Post
 export const createPost = async (req, res) => {
@@ -30,10 +30,10 @@ export const createPost = async (req, res) => {
       });
       // если все хорошо то..
       await newPostWithImage.save();
-      await User.findByIdAndUpdate(req.userId),
+      await User.findByIdAndUpdate(req.userId,
         {
           $push: { posts: newPostWithImage },
-        };
+        });
       return res.json(newPostWithImage);
     }
     // формирование поста без Изображения
@@ -45,10 +45,10 @@ export const createPost = async (req, res) => {
       author: req.userId,
     });
     await newPostWithoutImage.save();
-    await User.findByIdAndUpdate(req.userId),
+    await User.findByIdAndUpdate(req.userId,
       {
         $push: { posts: newPostWithoutImage },
-      };
+      });
     res.json(newPostWithoutImage);
   } catch (error) {
     res.json({ message: "Что-то пошло не так" });
@@ -78,7 +78,7 @@ export const getById = async (req, res) => {
     const post = await Post.findByIdAndUpdate(req.params.id, {
       $inc: { views: 1 },
     });
-    return res.json(post);
+    res.json(post);
   } catch (error) {
     res.json({ message: "Что-то пошло не так" });
   }
@@ -137,6 +137,20 @@ export const updatePost = async (req, res) => {
     await post.save();
 
     res.json(post);
+  } catch (error) {
+    res.json({ message: "Что-то пошло не так" });
+  }
+};
+// Get Post Comments
+export const getPostComments = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    const list = await Promise.all(
+      post.comments.map((comment) => {
+        return Comment.findById(comment);
+      })
+    );
+    res.json(list);
   } catch (error) {
     res.json({ message: "Что-то пошло не так" });
   }

@@ -3,9 +3,11 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import fileUpload from "express-fileupload";
 import authRoute from "./routes/auth.js";
 import postRoute from "./routes/posts.js";
-import fileUpload from "express-fileupload";
+import commentRoute from "./routes/comments.js"
+
 
 const app = express();
 
@@ -22,14 +24,15 @@ app.use(cors());
 // функ для принятия данных с фронта в формате json
 app.use(express.json());
 // для загрузки файлов на сервер
-app.use(fileUpload())
+app.use(fileUpload());
 // для того чтобы express понимал где лежат статические файлы
-app.use(express.static('uploads'))
+app.use(express.static("uploads"));
 
-// Routes 
+// Routes
 // при запросе на такой адресс будут отрабатывать все роуты которые я описываю в auth.js
 app.use("/api/auth", authRoute);
 app.use("/api/posts", postRoute);
+app.use("/api/comments", commentRoute);
 
 async function start() {
   try {
